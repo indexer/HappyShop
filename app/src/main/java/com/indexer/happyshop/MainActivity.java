@@ -72,7 +72,6 @@ public class MainActivity extends AppCompatActivity implements LifecycleRegistry
     product_list.addItemDecoration(dividerItemDecoration);
     product_list.setLayoutManager(linearLayoutManager);
 
-
     viewModel = ViewModelProviders.of(this).get(ProductListViewModel.class);
     mAppDatabase = AppDatabase.getDatabase(this.getApplication());
     if (mAppDatabase.getProductDao() != null) {
@@ -108,8 +107,6 @@ public class MainActivity extends AppCompatActivity implements LifecycleRegistry
           }
         });
   }
-
-
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
     return super.onCreateOptionsMenu(menu);
