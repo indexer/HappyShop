@@ -1,0 +1,5 @@
+<resources>
+  <string name="app_name">HappyShop</string>
+  <string name="discount">ON SALE</string>
+  <string name="cd_products_list">Products list</string>
+</resources>

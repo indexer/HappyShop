@@ -1,0 +1,35 @@
+
+[
+    {
+      "id": 26,
+      "name": "DownBoy 9.9g",
+      "category": "Makeup",
+      "price": 2900,
+      "img_url": "http://luxola-assets-staging-nemesis.s3.amazonaws.com/images/pictures/9583/default_2890446cfff9f964de59276776e36052263c277f_1423036598_THEBALM_downboy.jpg",
+      "under_sale": true
+    },
+    {
+      "id": 190,
+      "name": "Original Panther Black",
+      "category": "Tools",
+      "price": 3000,
+      "img_url": "http://luxola-assets-staging-nemesis.s3.amazonaws.com/images/pictures/6183/default_f6d5b9cedcfb28b2402b914735bd3e9bf886183c_1408961000_TT_Blackpanther_1.jpg",
+      "under_sale": false
+    },
+    {
+      "id": 1,
+      "name": "Sandalwood Cologne 50ml",
+      "category": "Skincare",
+      "price": 8500,
+      "img_url": "http://luxola-assets-staging-nemesis.s3.amazonaws.com/images/pictures/6357/default_da459f26105618f9e0bc868a869e26485e6d7034_1409282353_GFT-andalwoodcologne.jpg",
+      "under_sale": false
+    },
+    {
+      "id": 18,
+      "name": "Big It Up! Firm Mousse 200ml",
+      "category": "Bath & Body",
+      "price": 2200,
+      "img_url": "http://luxola-assets-staging-nemesis.s3.amazonaws.com/images/pictures/10919/default_b974b3cf773a7d610adc27a28a3a032b7bb3f75d_1432197755_BigItUp__Mousse_200ml.jpg",
+      "under_sale": true
+    }
+  ]

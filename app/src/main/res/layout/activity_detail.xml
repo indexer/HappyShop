@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    tools:context="com.indexer.happyshop.DetailActivity">
+  <android.support.design.widget.AppBarLayout
+      android:id="@+id/app_bar"
+      android:layout_height="wrap_content"
+      android:layout_width="match_parent">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/mToolbar"
+        android:fitsSystemWindows="true"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@android:color/transparent"
+        app:theme="@style/ThemeOverlay.AppCompat.Light"
+        app:elevation="8dp"
+        app:layout_collapseMode="pin"
+        app:popupTheme="@style/ThemeOverlay.AppCompat"
+    />
+    <ImageView
+        android:scaleType="fitXY"
+        android:id="@+id/detailImage"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"/>
+
+  </android.support.design.widget.AppBarLayout>
+
+  <Button
+      android:textColor="#FFFFFF"
+      android:background="@color/colorAccent"
+      android:text="Add to Cart"
+      android:layout_margin="16dp"
+      android:layout_below="@+id/app_bar"
+      android:id="@+id/addCart"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"/>
+
+  <TextView
+      android:layout_margin="16dp"
+      android:id="@+id/info"
+      android:layout_below="@+id/addCart"
+      android:text="Details:"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"/>
+
+  <android.support.v7.widget.CardView
+      android:layout_below="@id/info"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+    <LinearLayout android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="16dp"
+        android:layout_height="wrap_content">
+
+      <TextView
+          android:fontFamily="sans-serif-condensed"
+          android:padding="8dp"
+          android:id="@+id/product_name"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"/>
+      <TextView
+          android:fontFamily="sans-serif-condensed"
+          android:padding="8dp"
+          android:id="@+id/product_price"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"/>
+      <TextView
+          android:fontFamily="sans-serif-condensed"
+          android:padding="8dp"
+          android:id="@+id/product_description"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+  </android.support.v7.widget.CardView>
+
+
+</RelativeLayout>
