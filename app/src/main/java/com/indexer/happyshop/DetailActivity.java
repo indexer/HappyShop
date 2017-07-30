@@ -52,10 +52,10 @@ public class DetailActivity extends AppCompatActivity implements LifecycleRegist
 
     mProduct = (ProductEntity) getIntent().getSerializableExtra("product");
     final String browseId = mProduct.getId() + ".json";
+    getSupportActionBar().setTitle(mProduct.getName());
     //for testusage
     /*String browseId ="10.json";
     int productId =10;*/
-
 
     viewModel = ViewModelProviders.of(this).get(ProductListViewModel.class);
     viewModel.getProductById(mProduct.getId()).observe(this, new Observer<ProductEntity>() {
