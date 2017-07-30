@@ -45,6 +45,7 @@ public class HomeActivity extends AppCompatActivity implements LifecycleRegistry
   @BindView(R.id.mToolbar) Toolbar mToolbar;
   @BindView(R.id.cart_info) TextView mCartInfo;
   @BindView(R.id.main_content) CoordinatorLayout coordinatorLayout;
+  @BindView(R.id.cart_total) TextView getmCartInfoTotal;
   private ProductListViewModel viewModel;
   private final LifecycleRegistry mRegistry = new LifecycleRegistry(this);
 
@@ -83,6 +84,7 @@ public class HomeActivity extends AppCompatActivity implements LifecycleRegistry
           mCarts.setVisibility(View.VISIBLE);
           mCartInfo.setVisibility(View.GONE);
         }
+        getmCartInfoTotal.setText("" + productEntityList.size());
         cartAdapter.setItems(productEntityList);
       }
     });

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <android.support.design.widget.CoordinatorLayout
-    android:id="@+id/main_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_content"
     android:layout_width="match_parent" android:background="@android:color/white"
     android:layout_height="match_parent">
   <android.support.design.widget.AppBarLayout
@@ -52,17 +52,29 @@
           android:layout_height="200dp">
 
       </android.support.v7.widget.RecyclerView>
-
-      <TextView
-          android:layout_below="@+id/category"
-          android:textStyle="bold"
-          android:id="@+id/cart_title"
-          android:padding="16dp"
-          android:text="Your Items"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"/>
       <RelativeLayout android:layout_width="match_parent"
-          android:layout_below="@+id/cart_title"
+          android:id="@+id/total_count"
+          android:layout_below="@+id/category"
+          android:layout_height="wrap_content">
+        <TextView
+            android:layout_alignParentLeft="true"
+            android:textStyle="bold"
+            android:id="@+id/cart_title"
+            android:padding="16dp"
+            android:text="Your Items"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:layout_alignParentRight="true"
+            android:textStyle="bold"
+            android:id="@+id/cart_total"
+            android:padding="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+      </RelativeLayout>
+
+      <RelativeLayout android:layout_width="match_parent"
+          android:layout_below="@+id/total_count"
           android:layout_height="match_parent">
         <TextView
             android:id="@+id/cart_info"
