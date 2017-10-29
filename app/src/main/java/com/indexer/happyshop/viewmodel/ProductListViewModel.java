@@ -6,128 +6,115 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+
 import com.indexer.happyshop.database.AppDatabase;
 import com.indexer.happyshop.database.entity.ProductEntity;
-import com.indexer.happyshop.model.Product;
 import com.indexer.happyshop.model.ProductDetailReturnObject;
 import com.indexer.happyshop.model.ProductReturnObject;
 import com.indexer.happyshop.rest.RestClient;
+
 import java.util.List;
+import java.util.concurrent.Callable;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ProductListViewModel extends AndroidViewModel {
 
-  private static final MutableLiveData ABSENT = new MutableLiveData();
-  AppDatabase mAppDatabase;
+    private static final MutableLiveData ABSENT = new MutableLiveData();
+    AppDatabase mAppDatabase;
 
-  static {
-    //noinspection unchecked
-    ABSENT.setValue(null);
-  }
-
-  private LiveData<List<ProductEntity>> mObservableProducts;
-  private LiveData<ProductEntity> mObservableProduct;
-  private LiveData<List<ProductEntity>> getmObservableCarts;
-  private LiveData<List<ProductEntity>> getProductsByCategory;
-
-  public ProductListViewModel(Application application) {
-    super(application);
-    mAppDatabase = AppDatabase.getDatabase(this.getApplication());
-    mObservableProducts = mAppDatabase.getProductDao().loadAllProducts();
-    getmObservableCarts = mAppDatabase.getProductDao().loadAllCarts(true);
-  }
-
-  private static class insertAsyncTask extends AsyncTask<List<ProductEntity>, Void, Void> {
-
-    private AppDatabase db;
-
-    insertAsyncTask(AppDatabase appDatabase) {
-      db = appDatabase;
+    static {
+        //noinspection unchecked
+        ABSENT.setValue(null);
     }
 
-    @SafeVarargs @Override
-    protected final Void doInBackground(final List<ProductEntity>... params) {
-      db.getProductDao().insertAll(params[0]);
-      return null;
-    }
-  }
+    private LiveData<List<ProductEntity>> mObservableProducts;
+    private LiveData<List<ProductEntity>> getmObservableCarts;
 
-  private static class updateAsyncTask extends AsyncTask<ProductEntity, Void, Void> {
-
-    private AppDatabase db;
-
-    updateAsyncTask(AppDatabase appDatabase) {
-      db = appDatabase;
+    public ProductListViewModel(Application application) {
+        super(application);
+        mAppDatabase = AppDatabase.getDatabase(this.getApplication());
+        mObservableProducts = mAppDatabase.getProductDao().loadAllProducts();
+        getmObservableCarts = mAppDatabase.getProductDao().loadAllCarts(true);
     }
 
-    @SafeVarargs @Override
-    protected final Void doInBackground(final ProductEntity... params) {
-      db.getProductDao().updateProduct(params[0]);
-      return null;
+
+    public void fetchData(String category, int page) {
+        Call<ProductReturnObject> productReturnObjectCall =
+                RestClient.getService(this.getApplication().getApplicationContext())
+                        .getProducts(category, page);
+        productReturnObjectCall.enqueue(
+                new Callback<ProductReturnObject>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ProductReturnObject> call,
+                                           @NonNull Response<ProductReturnObject> response) {
+                        insertData(response.body().getProductEntityArrayList());
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<ProductReturnObject> call, @NonNull Throwable t) {
+
+                    }
+                });
     }
-  }
 
-  public void fetchData(String category, int page) {
-    Call<ProductReturnObject> productReturnObjectCall =
-        RestClient.getService(this.getApplication().getApplicationContext())
-            .getProducts(category, page);
-    productReturnObjectCall.enqueue(
-        new Callback<ProductReturnObject>() {
-          @Override
-          public void onResponse(@NonNull Call<ProductReturnObject> call,
-              @NonNull Response<ProductReturnObject> response) {
-            insertData(response.body().getProductEntityArrayList());
-          }
+    private void insertData(final List<ProductEntity> productEntityList) {
+        io.reactivex.Observable.fromCallable(new Callable<List<ProductEntity>>() {
+            @Override
+            public List<ProductEntity> call() throws Exception {
+                mAppDatabase.getProductDao().insertAll(productEntityList);
+                return null;
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe();
+    }
 
-          @Override public void onFailure(@NonNull Call<ProductReturnObject> call, Throwable t) {
+    public void updateProduct(final ProductEntity productEntity) {
+        io.reactivex.Observable.fromCallable(new Callable<ProductEntity>() {
+            @Override
+            public ProductEntity call() throws Exception {
+                mAppDatabase.getProductDao().updateProduct(productEntity);
+                return null;
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe();
+    }
 
-          }
+    public void fetchDataForDetail(String product) {
+        Call<ProductDetailReturnObject> mRProducat = RestClient.getService(this.getApplication().
+                getApplicationContext()).getProduct(product);
+        mRProducat.enqueue(new Callback<ProductDetailReturnObject>() {
+            @Override
+            public void onResponse(@NonNull Call<ProductDetailReturnObject> call,
+                                   @NonNull Response<ProductDetailReturnObject> response) {
+                updateProduct(response.body().getProductEntity());
+
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ProductDetailReturnObject> call, Throwable t) {
+
+            }
         });
-  }
+    }
 
-  public void insertData(List<ProductEntity> productEntityList) {
-    new insertAsyncTask(mAppDatabase).execute(productEntityList);
-  }
+    /**
+     * Expose the LiveData Products query so the UI can observe it.
+     */
+    public LiveData<List<ProductEntity>> getProducts() {
+        return mObservableProducts;
+    }
 
-  public void updateProduct(ProductEntity productEntity) {
-    new updateAsyncTask(mAppDatabase).execute(productEntity);
-  }
+    public LiveData<List<ProductEntity>> getAllCarts() {
+        return getmObservableCarts;
+    }
 
-  public void fetchDataForDetail(String product) {
-    Call<ProductDetailReturnObject> mRProducat = RestClient.getService(this.getApplication().
-        getApplicationContext()).getProduct(product);
-    mRProducat.enqueue(new Callback<ProductDetailReturnObject>() {
-      @Override public void onResponse(Call<ProductDetailReturnObject> call,
-          Response<ProductDetailReturnObject> response) {
-        updateProduct(response.body().getProductEntity());
-      }
+    public LiveData<ProductEntity> getProductById(int id) {
+        return mAppDatabase.getProductDao().loadProduct(id);
+    }
 
-      @Override public void onFailure(Call<ProductDetailReturnObject> call, Throwable t) {
-
-      }
-    });
-  }
-
-  /**
-   * Expose the LiveData Products query so the UI can observe it.
-   */
-  public LiveData<List<ProductEntity>> getProducts() {
-    return mObservableProducts;
-  }
-
-  public LiveData<List<ProductEntity>> getAllCarts() {
-    return getmObservableCarts;
-  }
-
-  public LiveData<ProductEntity> getProductById(int id) {
-    mObservableProduct = mAppDatabase.getProductDao().loadProduct(id);
-    return mObservableProduct;
-  }
-
-  public LiveData<List<ProductEntity>> getProductsByCategory(String category) {
-    getProductsByCategory = mAppDatabase.getProductDao().loadProductCategory(category);
-    return getProductsByCategory;
-  }
+    public LiveData<List<ProductEntity>> getProductsByCategory(String category) {
+        return mAppDatabase.getProductDao().loadProductCategory(category);
+    }
 }
